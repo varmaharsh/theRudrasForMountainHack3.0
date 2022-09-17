@@ -1,83 +1,65 @@
-// import SimpleTableComponent from 'reactjs-simple-table';
 
-const columns = [
-  {
-    field: 'id',
-    headerName: 'ID',
-  },
-  {
-    field: 'name',
-    headerName: 'Name',
-  },
-  {
-    field: 'Domain',
-    headerName: 'Domain',
-  },
-  {
-    field: 'Description',
-    headerName: 'Description',
-  },
-  {
-    field: 'State',
-    headerName: 'State',
-  },
-];
 
-// const data = [
-// { id: 2, name: "Anom", Domain: "heath Care", Description: '70% of my budget going into health care sector', State: "Fulifiled" },
-// { id: 4, name: "Megha", Domain: 'power', Description: '70% of my budget going into health care sector',  State: "Unfulfiled" },
-// { id: 5, name: "Subham", Domain: "Education", Description: '70% of my budget going into health care sector',  State: "Inprogress"},
-// { id: 5, name: "Subham", Domain: "Education", Description: '70% of my budget going into health care sector',  State: "Inprogress"},
-// { id: 5, name: "Subham", Domain: "Education", Description: '70% of my budget going into health care sector',  State: "Inprogress"},
-// { id: 5, name: "Subham", Domain: "Education", Description: '70% of my budget going into health care sector',  State: "Inprogress"},
-// ]
 
-function Table() {
-  const heads = ["id", 'Name', 'Domain', 'Description', 'State'];
+function Table({promisesByCandidateId}) {
+  const heads = ["id", 'Domain', 'Description', "fulfiled", "unfulfiled", "inProgress"];
   const data = [
     {
       id: 2,
       name: 'Anom',
       Domain: 'heath Care',
       Description: '70% of my budget going into health care sector',
-      State: 'Fulifiled',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
     {
       id: 4,
       name: 'Megha',
       Domain: 'power',
       Description: '70% of my budget going into health care sector',
-      State: 'Unfulfiled',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
     {
       id: 5,
       name: 'Subham',
       Domain: 'Education',
       Description: '70% of my budget going into health care sector',
-      State: 'Inprogress',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
     {
       id: 5,
       name: 'Subham',
       Domain: 'Education',
       Description: '70% of my budget going into health care sector',
-      State: 'Inprogress',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
     {
       id: 5,
       name: 'Subham',
       Domain: 'Education',
       Description: '70% of my budget going into health care sector',
-      State: 'Inprogress',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
     {
       id: 5,
       name: 'Subham',
       Domain: 'Education',
       Description: '70% of my budget going into health care sector',
-      State: 'Inprogress',
+      fulfiled: 5034,
+      unfulfiled: 370,
+      inprogress: 2000,
     },
   ];
+  console.log("from table", promisesByCandidateId)
 
   return (
     <div className="App">
@@ -92,13 +74,16 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data.map((val, key) => (
+          {promisesByCandidateId.map((val, key) => (
             <tr key={key}>
               <td>{val.id}</td>
-              <td>{val.name}</td>
-              <td>{val.Domain}</td>
-              <td>{val.Description}</td>
-              <td>{val.State}</td>
+              <td>{val.domain}</td>
+              <td>{val.description}</td>
+              {/* <td>{val.fulfilled}</td> */}
+              {/* <td>{val.unfulfilled}</td> */}
+              {/* <td>{val.fulfilled}</td> */}
+              {/* <td>{val.inprogress}</td> */}
+              {/* <td>{val.unfulfilled}</td> */}
             </tr>
           ))}
         </tbody>
