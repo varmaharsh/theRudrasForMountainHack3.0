@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract DAO {
-    event AgendaAdded(address, uint16, string, string);
+    event PromiseAdded(address, uint16, string, string);
 
     //Vote Type
     enum vote_type {
@@ -12,7 +12,7 @@ contract DAO {
     }
 
     // Promise object
-    struct Agenda {
+    struct Promise {
         //keep incremneting as promise gets added
         uint16 id;
         string domain;
@@ -37,7 +37,7 @@ contract DAO {
         uint8 experience;
     }
 
-    mapping(uint16 => Agenda) internal promises;
+    mapping(uint16 => Promise) internal promises;
     mapping(uint256 => address[]) internal promiseIdToAddress;
 
     // use this to check if user calling the function is candidate or voter
@@ -50,7 +50,7 @@ contract DAO {
     mapping(address => uint16[]) candidateAddressToPromiseId;
 
     // increment this after adding a promise
-    uint16 agendaId = 1;
+    uint16 promiseId = 1;
 
     // add a function to return a whether a given address is candidate or not
     //gtrHarish function1
@@ -72,14 +72,15 @@ contract DAO {
     function getPromisesByCandidateId(address candidateId)
         public
         view
-        returns (Agenda[] memory)
+        returns (Promise[] memory)
     {
+        // check if msg.sender if candidate
         uint16[] memory promiseIds = candidateAddressToPromiseId[candidateId];
-        Agenda[] memory agendas = new Agenda[](promiseIds.length);
+        Promise[] memory promisesByCandidate = new Promise[](promiseIds.length);
         for (uint16 i = 0; i < promiseIds.length; i++) {
-            agendas[i] = (promises[promiseIds[i]]);
+            promisesByCandidate[i] = (promises[promiseIds[i]]);
         }
-        return agendas;
+        return promisesByCandidate;
     }
 
     // check if msg.sender is not a candidate
@@ -97,15 +98,13 @@ contract DAO {
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
 
     // function to add promise given a candidate id and promise details
-    // check if msg.sender is a candidate
-    // take all promise details except the fulfilled, unfulfilled counts etc, assign then zero
-    function addAgenda(string calldata domain, string calldata description)
+    function addPromise(string calldata domain, string calldata description)
         external
     {
         // check if msg.sender is a candidate
 
-        Agenda memory newAgenda = Agenda(
-            agendaId,
+        Promise memory newPromise = Promise(
+            promiseId,
             domain,
             description,
             0,
@@ -113,10 +112,10 @@ contract DAO {
             0
         );
 
-        candidateAddressToPromiseId[msg.sender].push(agendaId);
-        promises[agendaId] = newAgenda;
-        agendaId++;
-        emit AgendaAdded(msg.sender, agendaId, domain, description);
+        candidateAddressToPromiseId[msg.sender].push(promiseId);
+        promises[promiseId] = newPromise;
+        promiseId++;
+        emit PromiseAdded(msg.sender, promiseId, domain, description);
     }
 
     // function to add a candidate
