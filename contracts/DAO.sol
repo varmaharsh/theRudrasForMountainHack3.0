@@ -38,7 +38,7 @@ contract DAO {
     }
 
     mapping(uint16 => Promise) internal promises;
-    mapping(uint256 => address[]) internal promiseIdToAddress;
+    mapping(address => uint16[]) internal voterAddressToPromiseIds;
 
     // use this to check if user calling the function is candidate or voter
     address[] internal candidateAddresses;
@@ -93,9 +93,43 @@ contract DAO {
         }
     }
 
+    //function to check if voter has voted on promise already
+    function ifVoterHasAlreadyVoted(uint16 _promiseId, address voter)
+        internal
+        view
+        returns (bool)
+    {
+        bool check = false;
+        uint16[] memory votedPromises = voterAddressToPromiseIds[voter];
+        for (uint16 i = 0; i < votedPromises.length; i++) {
+            if (votedPromises[i] == _promiseId) {
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
+
     // function to edit a promise object given its promise id,
     //basically take promise id and vote type as input and check if msg.sender is not already in promiseIdToAddress mapping
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
+    function VoteForPromise(uint16 _promiseId, uint16 _vote_type) external {
+        // check if msg.sender is not a candidate
+
+        // check if voter has already voted on this promise
+        bool check = ifVoterHasAlreadyVoted(_promiseId, msg.sender);
+        require(!check, "Voter has already voted for this promise");
+        Promise memory promiseObject = promises[_promiseId];
+        if (_vote_type == 0) {
+            promiseObject.unfulfilled++;
+        } else if (_vote_type == 1) {
+            promiseObject.fulfilled++;
+        } else {
+            promiseObject.inprogress++;
+        }
+        promises[_promiseId] = promiseObject;
+        voterAddressToPromiseIds[msg.sender].push(_promiseId);
+    }
 
     // function to add promise given a candidate id and promise details
     function addPromise(string calldata domain, string calldata description)
