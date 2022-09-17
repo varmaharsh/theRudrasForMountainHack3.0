@@ -66,6 +66,10 @@ contract DAO {
     }
 
     // function to return details of a candidate given his id/address
+    function getCandidateDetails() public view returns (Candidate memory) {
+        require(isACandidate(msg.sender));
+        return candidates[msg.sender];
+    }
 
     // function to return all promises given a candidate id/address
     function getPromisesByCandidateId(address candidateId)
@@ -109,6 +113,7 @@ contract DAO {
         // check if voter has already voted on this promise
         bool check = ifVoterHasAlreadyVoted(_promiseId, msg.sender);
         require(!check, "Voter has already voted for this promise");
+
         Promise memory promiseObject = promises[_promiseId];
         if (_vote_type == 0) {
             promiseObject.unfulfilled++;
