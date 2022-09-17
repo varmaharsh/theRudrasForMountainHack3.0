@@ -55,7 +55,15 @@ contract DAO {
     }
 
     // function to return list of candidates with info, this should be an array
-    function getAllCandidates() public view returns (Candidate[] memory) {}
+    function getAllCandidates() public view returns (Candidate[] memory) {
+        Candidate[] memory returnCandidates = new Candidate[](
+            candidateAddresses.length
+        );
+        for (uint i = 0; i < candidateAddresses.length; i++) {
+            returnCandidates[i] = candidates[candidateAddresses[i]];
+        }
+        return returnCandidates;
+    }
 
     // function to return details of a candidate given his id/address
 
