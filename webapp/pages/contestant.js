@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from '../Components/Table';
+import Modal from '../Components/modal';
 
 function Contestant() {
+  const [showModal, setShowModal] = useState(false);
+
+
+
+
   return (
     <div className="container">
-      <h1 className="desc hbio">Contestant: AYUSHI AISHA</h1>
+      <div>
+        <h1 className="desc hbio">Contestant: AYUSHI AISHA</h1>
+        <button onClick={() => setShowModal(!showModal)}>
+          {showModal ? <p>Close</p> : <p>Add Promise</p>}
+        </button>
+      </div>
       <div className="sides">
         <div className="sideA">
           <h4>Bio</h4>
@@ -37,11 +48,10 @@ function Contestant() {
         </div>
         <div className="side">
           <h4>Promises</h4>
-          <div>
-            <Table />
-          </div>
+          <Table />
         </div>
       </div>
+      {showModal ? <Modal /> : null}
     </div>
   );
 }
