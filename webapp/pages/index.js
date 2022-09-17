@@ -2,6 +2,8 @@ import { Contract, providers } from "ethers";
 import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
+import Contestant from "../Components/contestant";
+import AllContestants from "../Components/contestants"; 
 
 // use this to make call to the contract
 import { abi, CONTRACT_ADDRESS } from "../constants";
@@ -10,6 +12,10 @@ import styles from "../styles/Home.module.css";
 export default function Home() {
   // walletConnected keep track of whether the user's wallet is connected or not
   const [walletConnected, setWalletConnected] = useState(false);
+  const [isACandidate, setisACandidate] = useState(false);
+  const [candidateDetails, setcandidateDetails] = useState([]);
+  const [allCandidates, setallCandidates] = useState([]);
+  const [promisesByCandidateId, setpromisesByCandidateId] = useState([]);
 
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
   const web3ModalRef = useRef();
@@ -69,20 +75,24 @@ export default function Home() {
       const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
 
       const isACandidate = await contract.isACandidate(signer.getAddress());
-      console.log("isACandidate", isACandidate);
+      // console.log("isACandidate", isACandidate);
+      setisACandidate(isACandidate)
 
       const allCandidates = await contract.getAllCandidates();
-      console.log("candidates", allCandidates);
+      setallCandidates(allCandidates)
+      // console.log("candidates", allCandidates);
 
       const candidateDetails = await contract.getCandidateDetails(
         signer.getAddress()
       );
       console.log("candidate details", candidateDetails);
+      setcandidateDetails(candidateDetails)
 
       const promisesByCandidateId = await contract.getPromisesByCandidateId(
         signer.getAddress()
       );
-      console.log("promises", promisesByCandidateId);
+      // console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId)
 
       // const addPromise = await contract.addPromise(
       //   signer.getAddress(),
@@ -142,15 +152,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.main}>
-        <div>
-          <h1 className={styles.title}>
-            Welcome to Election Campaign Promise tracker
-          </h1>
-          <div className={styles.description}>
-            It keeeps a track of the agenda of all the elected candidates.
-          </div>
-          {renderButton()}
-        </div>
+        {isACandidate? (<Contestant candidateDetails={candidateDetails} promisesByCandidateId={promisesByCandidateId} />): (<AllContestants allCandidates={allCandidates}/>)}
       </div>
 
       <footer className={styles.footer}>
