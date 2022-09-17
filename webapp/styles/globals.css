@@ -24,3 +24,178 @@ a {
     background: black;
   }
 }
+
+
+/* user css */
+/* contestants css */
+.nav-contain{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-weight: 200;
+  align-items: center;
+  color: white;
+}
+.logo{
+  font-style: italic;
+  font-weight: 700;
+  color: white;
+  font-size: 25px;
+}
+.desc{
+  font-weight: 600;
+  font-size: 20px;
+  background-color: rgba(255, 255, 255, 0.604);
+  color: #073a57;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+.connect-wallet{
+  background-color: rgba(255, 255, 255, 0.604);
+  color: #073a57;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+/* Overview */
+.overview-contain{
+  max-width: 900px;
+  margin: 0px auto;
+  padding: 20px;
+}
+
+.contestant{
+  font-size: 25px;
+  font-weight: 500;
+  color: white;
+}
+
+.cont-over{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+
+.prom{
+  background-color: white;
+  padding: 20px 25px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 14px;
+  color: rgb(21, 20, 20);
+  width: 250px;
+  /* box-shadow: 1px 2px 3px 4px white; */
+}
+.prom span{
+  font-size: 25px;
+}
+
+/* promise */
+.promise-contain{
+  max-width: 900px;
+  margin: 0px auto;
+  padding: 20px;
+}
+.promise-head{
+  font-size: 25px;
+  color: white;
+  font-weight: 500;
+  text-align: left;
+}
+.promise-list{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: black;
+}
+.list-head{
+  display: flex;
+  text-align: left;
+  font-weight: 500;
+}
+.id{
+  flex: 1;
+}
+.proms{
+  flex: 3;
+}
+.stat{
+  flex: 1;
+}
+
+
+
+
+.id{
+  flex: 1;
+}
+
+.proms{
+  flex: 3;
+}
+
+.stat{
+  flex: 1;
+}
+
+ul{
+  display: flex;
+  list-style: none;
+  padding-left: 0px;
+  text-align: left;
+}
+
+
+/* individual contesstant */
+.container{
+  align-items: center;
+  margin: 0px 100px
+}
+.sides {
+  display: flex;
+  justify-content: space-between; 
+}
+.sideA{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0px 30px
+}
+.info ul {
+  display: flex;
+  flex-direction: column;
+}
+.info ul li {
+  margin-top: 20px
+}
+.hbio {
+  width: contain;
+}
+
+
+
+/* Table styles */
+.App {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  table {
+  border: 2px solid forestgreen;
+  width: 800px;
+  height: 570px;
+  }
+  
+  th {
+  border-bottom: 1px solid black;
+  }
+  
+  td {
+  text-align: center;
+  }
+  
