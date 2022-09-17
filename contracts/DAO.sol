@@ -4,13 +4,6 @@ pragma solidity ^0.8.0;
 contract DAO {
     event PromiseAdded(address, uint16, string, string);
 
-    //Vote Type
-    enum vote_type {
-        FULFILLED,
-        UNFULFILLED,
-        ONGOING
-    }
-
     // Promise object
     struct Promise {
         //keep incremneting as promise gets added
@@ -43,6 +36,9 @@ contract DAO {
     // use this to check if user calling the function is candidate or voter
     address[] internal candidateAddresses;
 
+    // To figure out if an address is a candidate
+    mapping(address => bool) isAddressCandidate;
+
     // address to candidates
     mapping(address => Candidate) candidates;
 
@@ -54,17 +50,12 @@ contract DAO {
 
     // add a function to return a whether a given address is candidate or not
     //gtrHarish function1
-    function IsACandidate(address addr) private returns (bool) {
-        //check if this address exists in candidates map
-        // fix this condition
-        // if (candidates[addr] == bytes4(0x0)) {
-        //     return false;
-        // } else {
-        //     return true;
-        // }
+    function isACandidate(address addr) public view returns (bool) {
+        return isAddressCandidate[addr];
     }
 
     // function to return list of candidates with info, this should be an array
+    function getAllCandidates() public view returns (Candidate[] memory) {}
 
     // function to return details of a candidate given his id/address
 
@@ -74,23 +65,14 @@ contract DAO {
         view
         returns (Promise[] memory)
     {
-        // check if msg.sender if candidate
+        // check if msg.sender is candidate
+        require(isACandidate(candidateId), "Not an election candidate");
         uint16[] memory promiseIds = candidateAddressToPromiseId[candidateId];
         Promise[] memory promisesByCandidate = new Promise[](promiseIds.length);
         for (uint16 i = 0; i < promiseIds.length; i++) {
             promisesByCandidate[i] = (promises[promiseIds[i]]);
         }
         return promisesByCandidate;
-    }
-
-    // check if msg.sender is not a candidate
-    //gtrHarish function2
-    function IsMessengerAVoter() external returns (bool) {
-        if (!IsACandidate(msg.sender)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     //function to check if voter has voted on promise already
@@ -115,7 +97,7 @@ contract DAO {
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
     function VoteForPromise(uint16 _promiseId, uint16 _vote_type) external {
         // check if msg.sender is not a candidate
-
+        require(!isACandidate(msg.sender), "Not a voter");
         // check if voter has already voted on this promise
         bool check = ifVoterHasAlreadyVoted(_promiseId, msg.sender);
         require(!check, "Voter has already voted for this promise");
@@ -136,6 +118,7 @@ contract DAO {
         external
     {
         // check if msg.sender is a candidate
+        require(isACandidate(msg.sender), "Not an election candidate");
 
         Promise memory newPromise = Promise(
             promiseId,
@@ -153,15 +136,6 @@ contract DAO {
     }
 
     // function to add a candidate
-
-    //gtrHarish function3
-    function IsMessengerACandidate() external returns (bool) {
-        if (IsACandidate(msg.sender)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     // write a script to call this function and load the candidates on any env
 
