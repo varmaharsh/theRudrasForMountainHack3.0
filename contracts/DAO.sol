@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.0;
 
 contract DAO {
+    event AgendaAdded(address, uint16, string, string);
+
     //Vote Type
     enum vote_type {
         FULFILLED,
@@ -35,17 +37,20 @@ contract DAO {
         uint8 experience;
     }
 
-    mapping(uint256 => Agenda) internal promises;
+    mapping(uint16 => Agenda) internal promises;
     mapping(uint256 => address[]) internal promiseIdToAddress;
 
-    // use this to check if user calling the function is candiadate or voteer
+    // use this to check if user calling the function is candidate or voter
     address[] internal candidateAddresses;
 
     // address to candidates
     mapping(address => Candidate) candidates;
 
     // use this to find all promises by a candidate and then use the promises mapping to return them all
-    mapping(address => uint256) candidateAdressToPromiseId;
+    mapping(address => uint16[]) candidateAddressToPromiseId;
+
+    // increment this after adding a promise
+    uint16 agendaId = 1;
 
     // add a function to return a whether a given address is candidate or not
     //gtrHarish function1
@@ -64,8 +69,18 @@ contract DAO {
     // function to return details of a candidate given his id/address
 
     // function to return all promises given a candidate id/address
-
-    // function to edit a promise object given its promise id,
+    function getPromisesByCandidateId(address candidateId)
+        public
+        view
+        returns (Agenda[] memory)
+    {
+        uint16[] memory promiseIds = candidateAddressToPromiseId[candidateId];
+        Agenda[] memory agendas = new Agenda[](promiseIds.length);
+        for (uint16 i = 0; i < promiseIds.length; i++) {
+            agendas[i] = (promises[promiseIds[i]]);
+        }
+        return agendas;
+    }
 
     // check if msg.sender is not a candidate
     //gtrHarish function2
@@ -77,15 +92,35 @@ contract DAO {
         }
     }
 
+    // function to edit a promise object given its promise id,
     //basically take promise id and vote type as input and check if msg.sender is not already in promiseIdToAddress mapping
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
 
     // function to add promise given a candidate id and promise details
     // check if msg.sender is a candidate
-
     // take all promise details except the fulfilled, unfulfilled counts etc, assign then zero
+    function addAgenda(string calldata domain, string calldata description)
+        external
+    {
+        // check if msg.sender is a candidate
+
+        Agenda memory newAgenda = Agenda(
+            agendaId,
+            domain,
+            description,
+            0,
+            0,
+            0
+        );
+
+        candidateAddressToPromiseId[msg.sender].push(agendaId);
+        promises[agendaId] = newAgenda;
+        agendaId++;
+        emit AgendaAdded(msg.sender, agendaId, domain, description);
+    }
 
     // function to add a candidate
+
     //gtrHarish function3
     function IsMessengerACandidate() external returns (bool) {
         if (IsACandidate(msg.sender)) {
