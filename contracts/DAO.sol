@@ -11,12 +11,14 @@ contract DAO {
 
     // Promise object
     struct Agenda {
+        //keep incremneting as promise gets added
+        uint16 id;
         string domain;
         string description;
         // keep incrementing these based on vote
         uint256 fulfilled;
         uint256 unfulfilled;
-        uint256 ongoing;
+        uint256 inprogress;
     }
 
     //define the candidate here
@@ -25,6 +27,12 @@ contract DAO {
         address id;
         string name;
         string constituency;
+        string party;
+        string dob;
+        uint64 networth;
+        uint64 liquidity;
+        uint64 constituencySize;
+        uint8 experience;
     }
 
     mapping(uint256 => Agenda) internal promises;
@@ -41,14 +49,15 @@ contract DAO {
 
     // add a function to return a whether a given address is candidate or not
     //gtrHarish function1
-     function IsAnCandidate(address addr) external returns (bool){
+    function IsACandidate(address addr) private returns (bool) {
         //check if this address exists in candidates map
-        if(candidates[addr]== bytes4(0x0)){
-            return false;
-        }else{
-            return true;
-        }
-     }
+        // fix this condition
+        // if (candidates[addr] == bytes4(0x0)) {
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+    }
 
     // function to return list of candidates with info, this should be an array
 
@@ -56,39 +65,34 @@ contract DAO {
 
     // function to return all promises given a candidate id/address
 
-
     // function to edit a promise object given its promise id,
 
     // check if msg.sender is not a candidate
     //gtrHarish function2
-    function IsMessengerNotAnCandidate() external returns (bool){
-        if(!IsaAnCandidate(msg.sender))
-        {
+    function IsMessengerAVoter() external returns (bool) {
+        if (!IsACandidate(msg.sender)) {
             return true;
-        }else{
+        } else {
             return false;
         }
-        
     }
+
     //basically take promise id and vote type as input and check if msg.sender is not already in promiseIdToAddress mapping
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
 
     // function to add promise given a candidate id and promise details
     // check if msg.sender is a candidate
 
-
     // take all promise details except the fulfilled, unfulfilled counts etc, assign then zero
 
     // function to add a candidate
     //gtrHarish function3
-    function IsMessengerAnCandidate() external returns (bool){
-        if(IsaAnCandidate(msg.sender))
-        {
+    function IsMessengerACandidate() external returns (bool) {
+        if (IsACandidate(msg.sender)) {
             return true;
-        }else{
+        } else {
             return false;
         }
-        
     }
 
     // write a script to call this function and load the candidates on any env
