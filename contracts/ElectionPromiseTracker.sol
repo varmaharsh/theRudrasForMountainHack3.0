@@ -57,6 +57,34 @@ contract ElectionPromiseTracker {
             0
         );
         promises[0] = commonPromise;
+        addCandidate(
+            0xB34a6d412bD8e71994dfEee92154F0Ca418f3703,
+            "Daniel Crossby",
+            "Kanpur",
+            "TSH",
+            50000000000
+        );
+        addCandidate(
+            0x8ecCA9951E02Aa8DC7c01150e96C990bbBcb71f1,
+            "Christopher Mayer",
+            "Lucknow",
+            "Independent",
+            100000000000
+        );
+        addCandidate(
+            0x75Cd185daB34a9c9dFCDa24951a547f8eEF5e618,
+            "James Clear",
+            "Gorakhpur",
+            "AWS",
+            80000000000
+        );
+        addCandidate(
+            0x17AB14d818c78eB72A34dEbde4BD48C8F25C8dde,
+            "Benjamin Graham",
+            "Varanasi",
+            "AWS",
+            230000000000
+        );
     }
 
     // add a function to return a whether a given address is candidate or not
@@ -162,9 +190,9 @@ contract ElectionPromiseTracker {
     // function to add a candidate
     function addCandidate(
         address _id,
-        string calldata _name,
-        string calldata _constituency,
-        string calldata _party,
+        string memory _name,
+        string memory _constituency,
+        string memory _party,
         uint64 _networth
     ) public {
         Candidate memory newCandidate = Candidate(
