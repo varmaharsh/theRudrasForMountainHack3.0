@@ -2,15 +2,17 @@ const { ethers } = require("hardhat");
 require("dotenv").config({ path: ".env" });
 
 async function main() {
-  const sampleContract = await ethers.getContractFactory("Greeter");
+  const electionPromiseTrackerContract = await ethers.getContractFactory(
+    "ElectionPromiseTracker"
+  );
 
   // deploy the contract
-  const deployedSampleContract = await sampleContract.deploy("Hello, Polygon");
+  const deployedContract = await electionPromiseTrackerContract.deploy();
 
-  await deployedSampleContract.deployed();
+  await deployedContract.deployed();
 
   // print the address of the deployed contract
-  console.log("Sample Contract Address:", deployedSampleContract.address);
+  console.log("Deployed Contract Address:", deployedContract.address);
 }
 
 // Call the main function and catch if there is any error
