@@ -23,11 +23,7 @@ contract DAO {
         string name;
         string constituency;
         string party;
-        string dob;
         uint64 networth;
-        uint64 liquidity;
-        uint64 constituencySize;
-        uint8 experience;
     }
 
     mapping(uint16 => Promise) internal promises;
@@ -47,6 +43,21 @@ contract DAO {
 
     // increment this after adding a promise
     uint16 promiseId = 1;
+
+    Promise commonPromise;
+
+    constructor() {
+        // Add a common promise with id 0, as add to any candidate when it is added
+        commonPromise = Promise(
+            0,
+            "General",
+            "I will be easily reachable to my consitituency people",
+            0,
+            0,
+            0
+        );
+        promises[0] = commonPromise;
+    }
 
     // add a function to return a whether a given address is candidate or not
     //gtrHarish function1
@@ -149,6 +160,27 @@ contract DAO {
     }
 
     // function to add a candidate
+    function addCandidate(
+        address _id,
+        string calldata _name,
+        string calldata _constituency,
+        string calldata _party,
+        uint64 _networth
+    ) public {
+        Candidate memory newCandidate = Candidate(
+            _id,
+            _name,
+            _constituency,
+            _party,
+            _networth
+        );
+        candidateAddresses.push(_id);
+        isAddressCandidate[_id] = true;
+        candidates[_id] = newCandidate;
+        uint16[] memory commonPromises = new uint16[](1);
+        commonPromises[0] = 0;
+        candidateAddressToPromiseId[_id] = commonPromises;
+    }
 
     // write a script to call this function and load the candidates on any env
 
