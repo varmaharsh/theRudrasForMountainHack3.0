@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 
 // use this to make call to the contract
-import { abi, NFT_CONTRACT_ADDRESS } from "../constants";
+import { abi, CONTRACT_ADDRESS } from "../constants";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -60,6 +60,45 @@ export default function Home() {
     return web3Provider;
   };
 
+  const getCandidates = async () => {
+    try {
+      // Get the provider from web3Modal, which in our case is MetaMask
+      // No need for the Signer here, as we are only reading state from the blockchain
+      const signer = await getProviderOrSigner(true);
+
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+
+      const isACandidate = await contract.isACandidate(signer.getAddress());
+      console.log("isACandidate", isACandidate);
+
+      const allCandidates = await contract.getAllCandidates();
+      console.log("candidates", allCandidates);
+
+      const candidateDetails = await contract.getCandidateDetails(
+        signer.getAddress()
+      );
+      console.log("candidate details", candidateDetails);
+
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        signer.getAddress()
+      );
+      console.log("promises", promisesByCandidateId);
+
+      // const addPromise = await contract.addPromise(
+      //   signer.getAddress(),
+      //   "Hygiene",
+      //   "To make the water of ganges drinkable"
+      // );
+
+      // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
+      //   gasPrice: 100,
+      //   gasLimit: 9000000,
+      // });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
     if (!walletConnected) {
@@ -73,6 +112,14 @@ export default function Home() {
 
       connectWallet();
     }
+  }, [walletConnected]);
+
+  useEffect(() => {
+    (async () => {
+      if (walletConnected) {
+        await getCandidates();
+      }
+    })();
   }, [walletConnected]);
 
   const renderButton = () => {
