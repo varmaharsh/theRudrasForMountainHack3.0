@@ -105,9 +105,13 @@ contract ElectionPromiseTracker {
     }
 
     // function to return details of a candidate given his id/address
-    function getCandidateDetails() public view returns (Candidate memory) {
-        require(isACandidate(msg.sender));
-        return candidates[msg.sender];
+    function getCandidateDetails(address addr)
+        public
+        view
+        returns (Candidate memory)
+    {
+        //require(isACandidate(msg.sender), "Not an election candidate");
+        return candidates[addr];
     }
 
     // function to return all promises given a candidate id/address
@@ -146,11 +150,15 @@ contract ElectionPromiseTracker {
     // function to edit a promise object given its promise id,
     //basically take promise id and vote type as input and check if msg.sender is not already in promiseIdToAddress mapping
     // if not them update the promise vote count based on if it was fulfilled, unfulfilled etc
-    function VoteForPromise(uint16 _promiseId, uint16 _vote_type) external {
+    function VoteForPromise(
+        address sender,
+        uint16 _promiseId,
+        uint16 _vote_type
+    ) external {
         // check if msg.sender is not a candidate
-        require(!isACandidate(msg.sender), "Not a voter");
+        require(!isACandidate(sender), "Not a voter");
         // check if voter has already voted on this promise
-        bool check = ifVoterHasAlreadyVoted(_promiseId, msg.sender);
+        bool check = ifVoterHasAlreadyVoted(_promiseId, sender);
         require(!check, "Voter has already voted for this promise");
 
         Promise memory promiseObject = promises[_promiseId];
@@ -162,15 +170,17 @@ contract ElectionPromiseTracker {
             promiseObject.inprogress++;
         }
         promises[_promiseId] = promiseObject;
-        voterAddressToPromiseIds[msg.sender].push(_promiseId);
+        voterAddressToPromiseIds[sender].push(_promiseId);
     }
 
     // function to add promise given a candidate id and promise details
-    function addPromise(string calldata domain, string calldata description)
-        external
-    {
+    function addPromise(
+        address sender,
+        string calldata domain,
+        string calldata description
+    ) external {
         // check if msg.sender is a candidate
-        require(isACandidate(msg.sender), "Not an election candidate");
+        require(isACandidate(sender), "Not an election candidate");
 
         Promise memory newPromise = Promise(
             promiseId,
@@ -181,10 +191,10 @@ contract ElectionPromiseTracker {
             0
         );
 
-        candidateAddressToPromiseId[msg.sender].push(promiseId);
+        candidateAddressToPromiseId[sender].push(promiseId);
         promises[promiseId] = newPromise;
         promiseId++;
-        emit PromiseAdded(msg.sender, promiseId, domain, description);
+        emit PromiseAdded(sender, promiseId, domain, description);
     }
 
     // function to add a candidate
