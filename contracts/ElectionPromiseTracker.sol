@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract DAO {
+contract ElectionPromiseTracker {
     event PromiseAdded(address, uint16, string, string);
 
     // Promise object
@@ -181,13 +181,4 @@ contract DAO {
         commonPromises[0] = 0;
         candidateAddressToPromiseId[_id] = commonPromises;
     }
-
-    // write a script to call this function and load the candidates on any env
-
-    // write a script to deploy this on any network
-
-    // Please don't change the structure, so that I can take this forward from where you leave
-
-    // Do not commit anything, priotise storing candidates with script and deploying contracts, I can fill contract functions
-    // share text files on discord I'll commit it when time starts
 }
