@@ -3,7 +3,7 @@ import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 import Contestant from "../Components/contestant";
-import AllContestants from "../Components/contestants"; 
+import AllContestants from "../Components/contestants";
 
 // use this to make call to the contract
 import { abi, CONTRACT_ADDRESS } from "../constants";
@@ -66,7 +66,7 @@ export default function Home() {
     return web3Provider;
   };
 
-  const getCandidates = async () => {
+  const getCandidates = async (candidateId = "") => {
     try {
       // Get the provider from web3Modal, which in our case is MetaMask
       // No need for the Signer here, as we are only reading state from the blockchain
@@ -74,31 +74,26 @@ export default function Home() {
 
       const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
 
-      const isACandidate = await contract.isACandidate(signer.getAddress());
-      // console.log("isACandidate", isACandidate);
-      setisACandidate(isACandidate)
+      const _isACandidate = await contract.isACandidate(signer.getAddress());
+      //console.log("isACandidate", _isACandidate);
+      setisACandidate(_isACandidate);
 
       const allCandidates = await contract.getAllCandidates();
-      setallCandidates(allCandidates)
+      setallCandidates(allCandidates);
       // console.log("candidates", allCandidates);
 
-      const candidateDetails = await contract.getCandidateDetails(
-        signer.getAddress()
-      );
-      console.log("candidate details", candidateDetails);
-      setcandidateDetails(candidateDetails)
+      const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
+      //console.log("candidate id:", _candidateId);
+
+      const candidateDetails = await contract.getCandidateDetails(_candidateId);
+      //console.log("candidate details", candidateDetails);
+      setcandidateDetails(candidateDetails);
 
       const promisesByCandidateId = await contract.getPromisesByCandidateId(
-        signer.getAddress()
+        _candidateId
       );
       // console.log("promises", promisesByCandidateId);
-      setpromisesByCandidateId(promisesByCandidateId)
-
-      // const addPromise = await contract.addPromise(
-      //   signer.getAddress(),
-      //   "Hygiene",
-      //   "To make the water of ganges drinkable"
-      // );
+      setpromisesByCandidateId(promisesByCandidateId);
 
       // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
       //   gasPrice: 100,
@@ -106,6 +101,50 @@ export default function Home() {
       // });
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const addPromise = async (domain, description) => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+      const addPromise = await contract.addPromise(
+        signer.getAddress(),
+        domain,
+        description
+      );
+      addPromise.wait();
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        signer.getAddress()
+      );
+      // console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const addVote = async (promiseId, vote) => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+      const addVote = await contract.VoteForPromise(
+        signer.getAddress(),
+        promiseId,
+        vote
+      );
+      addVote.wait();
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        candidateId
+      );
+      //console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
     }
   };
 
@@ -132,6 +171,12 @@ export default function Home() {
     })();
   }, [walletConnected]);
 
+  useEffect(() => {
+    setInterval(async () => {
+      await getCandidates();
+    }, 5000);
+  }, []);
+
   const renderButton = () => {
     // If wallet is not connected, return a button which allows them to connect their wallet
     if (!walletConnected) {
@@ -141,7 +186,6 @@ export default function Home() {
         </button>
       );
     }
-    return <div>Powered By Polygon</div>;
   };
 
   return (
@@ -156,7 +200,26 @@ export default function Home() {
         />
       </Head>
       <div className={styles.main}>
-        {isACandidate? (<Contestant candidateDetails={candidateDetails} promisesByCandidateId={promisesByCandidateId} />): (<AllContestants allCandidates={allCandidates}/>)}
+        {renderButton()}
+        {isACandidate ? (
+          <Contestant
+            candidateDetails={candidateDetails}
+            promisesByCandidateId={promisesByCandidateId}
+            addPromise={addPromise}
+            isACandidate={isACandidate}
+            addVote={addVote}
+          />
+        ) : (
+          <AllContestants
+            allCandidates={allCandidates}
+            candidateDetails={candidateDetails}
+            promisesByCandidateId={promisesByCandidateId}
+            addPromise={addPromise}
+            isACandidate={isACandidate}
+            getCandidates={getCandidates}
+            addVote={addVote}
+          />
+        )}
       </div>
 
       <footer className={styles.footer}>

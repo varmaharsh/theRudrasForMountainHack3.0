@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import Table from './Table';
-import Modal from './modal';
+import React, { useState } from "react";
+import Table from "./Table";
+import Modal from "./modal";
 
-function Contestant({ candidateDetails, promisesByCandidateId }) {
-  // const [showModal, setShowModal] = useState(false);
-  const [modal, setModal] = useState(false)
-
-
-  const showModal = () => {
-    setModal((prev) => !prev);
-    console.log(modal);
-  };
-
-  // console.log("from candy", candidateDetails)
-  // console.log('from candy', promisesByCandidateId);
+const Contestant = ({
+  candidateDetails,
+  promisesByCandidateId,
+  addPromise,
+  isACandidate,
+  addVote,
+}) => {
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="cand">
-      <Modal modal={modal} setModal={setModal} showModal={showModal}/>
+      {showModal ? (
+        <Modal addPromise={addPromise} setShowModal={setShowModal} />
+      ) : null}
       <div className="cand-contain">
         <div className="cand-head">
           <h4 className="cand-name">Contestant: {candidateDetails.name}</h4>
-          <button onClick={showModal}>Add Promise</button>
+          {isACandidate ? (
+            <button onClick={() => setShowModal(!showModal)}>
+              {showModal ? <p>Close</p> : <p>Add Promise</p>}
+            </button>
+          ) : null}
         </div>
         <div className="cand-det">
           <div className="cand-left">
@@ -59,7 +61,7 @@ function Contestant({ candidateDetails, promisesByCandidateId }) {
                 <li>
                   <div className="candet">
                     <span>Net Worth:</span>
-                    <span>${`${candidateDetails}`.split(',')[4]}</span>
+                    <span>${`${candidateDetails}`.split(",")[4]}</span>
                   </div>
                 </li>
               </ul>
@@ -70,13 +72,16 @@ function Contestant({ candidateDetails, promisesByCandidateId }) {
             <p>These are the list of promises made by the contestant:</p>
             <div className="cand-prom-list">
               <ul className="cand-prom">
-                <Table promisesByCandidateId={promisesByCandidateId} />
+                <Table
+                  promisesByCandidateId={promisesByCandidateId}
+                  isACandidate={isACandidate}
+                  addVote={addVote}
+                />
               </ul>
             </div>
           </div>
         </div>
       </div>
-
       <style jsx>{`
         .cand-contain {
           max-width: 1000px;
@@ -228,6 +233,6 @@ function Contestant({ candidateDetails, promisesByCandidateId }) {
   //       </div>
   //     </div>
   //     {showModal ? <Modal /> : null}
-}
+};
 
 export default Contestant;

@@ -1,10 +1,22 @@
+import React, { useState } from "react";
+import { Button } from "web3uikit";
+import VoteModal from "./VoteModal";
 
+const Table = ({ promisesByCandidateId, isACandidate, addVote }) => {
+  let heads = [
+    "Id",
+    "Domain",
+    "Description",
+    "Fulfiled",
+    "Unfulfiled",
+    "InProgress",
+  ];
+  if (!isACandidate) {
+    heads = [...heads, "Action"];
+  }
 
-
-function Table({promisesByCandidateId}) {
-  const heads = ["id", 'Domain', 'Description', "fulfiled", "unfulfiled", "inProgress"];
-  
-  console.log("from table one data", promisesByCandidateId)
+  const [showVoteModal, setShowVoteModal] = useState(false);
+  const [selectedPromiseId, setSelectedPromiseId] = useState("");
 
   return (
     <div className="App">
@@ -12,7 +24,11 @@ function Table({promisesByCandidateId}) {
         <thead>
           <tr>
             {heads.map((val, key) => (
-              <th key={key} style={{ color: 'black', padding: "0px 10px" }} className="theader">
+              <th
+                key={key}
+                style={{ color: "black", padding: "0px 10px" }}
+                className="theader"
+              >
                 {val}
               </th>
             ))}
@@ -27,31 +43,48 @@ function Table({promisesByCandidateId}) {
               <td>{`${val.fulfilled}`}</td>
               <td>{`${val.unfulfilled}`}</td>
               <td>{`${val.inprogress}`}</td>
+              {!isACandidate ? (
+                <td>
+                  <Button
+                    onClick={() => {
+                      setShowVoteModal(true);
+                      setSelectedPromiseId(val.id);
+                    }}
+                    text="Vote"
+                    type="button"
+                  />
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>
       </table>
 
-      <style jsx>{`  
-      .theader {
-        color: black;
-        
-      }
-      td {
-        margin: 0px 30px;
-      }
-      .desc {
-        display: flex;
-        align-items: baseline;
-      }
-      .trd {
-        align-items: baseline;
-        flex-direction: row;
-        
-      }
+      <style jsx>{`
+        .theader {
+          color: black;
+        }
+        td {
+          margin: 0px 30px;
+        }
+        .desc {
+          display: flex;
+          align-items: baseline;
+        }
+        .trd {
+          align-items: baseline;
+          flex-direction: row;
+        }
       `}</style>
+      {showVoteModal ? (
+        <VoteModal
+          addVote={addVote}
+          setShowModal={setShowVoteModal}
+          promiseId={selectedPromiseId}
+        />
+      ) : null}
     </div>
   );
-}
+};
 
 export default Table;
