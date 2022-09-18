@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 import Contestant from "../Components/contestant";
 import AllContestants from "../Components/contestants";
+import Link from 'next/link';
+
 
 // use this to make call to the contract
 import { abi, CONTRACT_ADDRESS } from "../constants";
