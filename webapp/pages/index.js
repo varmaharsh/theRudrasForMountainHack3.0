@@ -104,30 +104,6 @@ export default function Home() {
     }
   };
 
-  const getCandidateDetails = async (_isACandidate) => {
-    if (!_isACandidate && candidateId === "") return;
-    const signer = await getProviderOrSigner(true);
-    const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
-    const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
-    const candidateDetails = await contract.getCandidateDetails(_candidateId);
-    // console.log("candidate details", candidateDetails);
-    setcandidateDetails(candidateDetails);
-  };
-
-  const getPromisesByCandidateId = async (_isACandidate) => {
-    debugger;
-    if (!_isACandidate && candidateId === "") return;
-    const signer = await getProviderOrSigner(true);
-
-    const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
-    const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
-    const promisesByCandidateId = await contract.getPromisesByCandidateId(
-      _candidateId
-    );
-    // console.log("promises", promisesByCandidateId);
-    setpromisesByCandidateId(promisesByCandidateId);
-  };
-
   const addPromise = async (domain, description) => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -163,7 +139,7 @@ export default function Home() {
       const promisesByCandidateId = await contract.getPromisesByCandidateId(
         candidateId
       );
-      console.log("promises", promisesByCandidateId);
+      //console.log("promises", promisesByCandidateId);
       setpromisesByCandidateId(promisesByCandidateId);
       return true;
     } catch (e) {
