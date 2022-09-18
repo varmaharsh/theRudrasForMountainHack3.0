@@ -19,7 +19,7 @@ const AllContestants = ({
   return (
     <>
       {showCandidatePage ? (
-        <div>
+        <div className="back-button">
           <div>
             <Button
               onClick={() => {
@@ -27,7 +27,8 @@ const AllContestants = ({
                 getCandidates();
               }}
               text="Back"
-              type="button"
+              type="reset"
+              size="large"
             />
           </div>
           <div>
@@ -71,6 +72,10 @@ const AllContestants = ({
         </div>
       )}
       <style jsx>{`
+        .back-button {
+          display: flex;
+          flex-direction: column;
+        }
         .promise-list {
           background-color: rgba(255, 255, 255, 0.711);
           border-radius: 10px;
