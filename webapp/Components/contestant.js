@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-import Table from './Table';
-import Modal from './modal';
+import React, { useState } from "react";
+import Table from "./Table";
+import Modal from "./modal";
 
-function Contestant({candidateDetails, promisesByCandidateId}) {
+function Contestant({ candidateDetails, promisesByCandidateId, addPromise }) {
   const [showModal, setShowModal] = useState(false);
   // console.log("from candy", candidateDetails)
-  console.log("from candy", promisesByCandidateId)
-
-
-
 
   return (
     <div className="container">
@@ -27,7 +23,7 @@ function Contestant({candidateDetails, promisesByCandidateId}) {
               <li>ID: {candidateDetails.id}</li>
               <li>Consituency: {candidateDetails.constituency}</li>
               <li>Party: {candidateDetails.party}</li>
-              <li>Net Worth: {`${candidateDetails}`.split(',')[4]}</li> 
+              <li>Net Worth: {`${candidateDetails}`.split(",")[4]}</li>
             </ul>
           </div>
         </div>
@@ -36,7 +32,9 @@ function Contestant({candidateDetails, promisesByCandidateId}) {
           <Table promisesByCandidateId={promisesByCandidateId} />
         </div>
       </div>
-      {showModal ? <Modal /> : null}
+      {showModal ? (
+        <Modal addPromise={addPromise} setShowModal={setShowModal} />
+      ) : null}
     </div>
   );
 }
