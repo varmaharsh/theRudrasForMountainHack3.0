@@ -1,10 +1,17 @@
+import { Button } from "web3uikit";
 
-
-
-function Table({promisesByCandidateId}) {
-  const heads = ["id", 'Domain', 'Description', "fulfiled", "unfulfiled", "inProgress"];
-  
-  console.log("from table one data", promisesByCandidateId)
+function Table({ promisesByCandidateId, isACandidate }) {
+  let heads = [
+    "Id",
+    "Domain",
+    "Description",
+    "Fulfiled",
+    "Unfulfiled",
+    "InProgress",
+  ];
+  if (!isACandidate) {
+    heads = [...heads, "Action"];
+  }
 
   return (
     <div className="App">
@@ -12,7 +19,7 @@ function Table({promisesByCandidateId}) {
         <thead>
           <tr>
             {heads.map((val, key) => (
-              <th key={key} style={{ color: 'white' }} className="">
+              <th key={key} style={{ color: "white" }} className="">
                 {val}
               </th>
             ))}
@@ -27,6 +34,11 @@ function Table({promisesByCandidateId}) {
               <td>{`${val.fulfilled}`}</td>
               <td>{`${val.unfulfilled}`}</td>
               <td>{`${val.inprogress}`}</td>
+              {!isACandidate ? (
+                <td>
+                  <Button onClick={() => {}} text="Vote" type="button" />
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>
