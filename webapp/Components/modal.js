@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNotification } from "web3uikit";
 
-function modal({ addPromise, setShowModal }) {
+const Modal = ({ addPromise, setShowModal }) => {
   const [Domain, setDomain] = useState("");
   const [Description, setDescription] = useState("");
   const dispatch = useNotification();
@@ -55,6 +55,6 @@ function modal({ addPromise, setShowModal }) {
       </form>
     </div>
   );
-}
+};
 
-export default modal;
+export default Modal;
