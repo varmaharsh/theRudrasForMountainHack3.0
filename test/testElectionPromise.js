@@ -53,7 +53,28 @@ describe("ElectionPromiseTracker", function () {
     
    });
   
-     
+     it("Add a Promise, and check event is emitted", async function () {
+    // Deploy the good contract
+    const electionPromiseTracker = await ethers.getContractFactory("ElectionPromiseTracker");
+    const electionPromise = await electionPromiseTracker.deploy();
+    await electionPromise.deployed();
+
+
+
+        //adding Promise
+        let watcher = electionPromise.PromiseAdded();
+
+      let resultAddPromise = electionPromise.addPromise(0x17AB14d818c78eB72A34dEbde4BD48C8F25C8dde,'test1domain','test1desc'); //event name
+      
+      let events = await watcher.get();
+      let event = events[0];
+      expect(event.args.domain).to.equal('test1domain'); //arg
+      expect(event.args.description).to.equal('test1desc'); //arg2
+    
+
+
+	
+  });
 
   it("test Add a Candidate", async function () {
     // 
