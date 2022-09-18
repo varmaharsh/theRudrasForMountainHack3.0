@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Table from './Table';
-import Modal from './modal';
+import React, { useState } from "react";
+import Link from "next/link";
+import Table from "./Table";
+import Modal from "./modal";
 
 const Contestant = ({
   candidateDetails,
@@ -18,20 +18,20 @@ const Contestant = ({
         <Modal addPromise={addPromise} setShowModal={setShowModal} />
       ) : null}
       <div className="cand-contain">
-            <div className='ctbtn'>
-              <ul className="nav-mean">
-                <li>
-                  <Link href="/">
-                    <a>About</a>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+        <div className="ctbtn">
+          <ul className="nav-mean">
+            <li>
+              <Link href="/">
+                <a>About</a>
+              </Link>
+            </li>
+          </ul>
+        </div>
         <div className="cand-head">
           <h4 className="cand-name">Contestant: {candidateDetails.name}</h4>
           {isACandidate ? (
             <button
-              className={showModal ? 'hide' : 'show'}
+              className={showModal ? "hide" : "show"}
               onClick={() => setShowModal(!showModal)}
             >
               {showModal ? <p>Close</p> : <p>Add Promise</p>}
@@ -60,7 +60,7 @@ const Contestant = ({
                     <span>
                       {candidateDetails.id &&
                         candidateDetails.id.substring(0, 10) +
-                          '....' +
+                          "...." +
                           candidateDetails.id.substring(
                             candidateDetails.id.length - 10
                           )}
@@ -82,7 +82,7 @@ const Contestant = ({
                 <li>
                   <div className="candet">
                     <span>Net Worth:</span>
-                    <span>${`${candidateDetails}`.split(',')[4]}</span>
+                    <span>${`${candidateDetails}`.split(",")[4]}</span>
                   </div>
                 </li>
               </ul>
@@ -108,9 +108,9 @@ const Contestant = ({
         </div>
       </div>
       <style jsx>{`
-      .ctbtn {
-        width: 200px;
-      }
+        .ctbtn {
+          width: 200px;
+        }
         .nav-mean {
           gap: 22px;
           color: white;

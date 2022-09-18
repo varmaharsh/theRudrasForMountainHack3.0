@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 const Intro = () => {
   return (
@@ -66,7 +66,7 @@ const Intro = () => {
       </div>
 
       <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 
         .intro-nav {
           display: flex;

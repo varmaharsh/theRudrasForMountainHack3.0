@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "web3uikit";
-import Link from 'next/link';
-
+import Link from "next/link";
 
 import Contestant from "../Components/contestant";
 
@@ -45,15 +44,15 @@ const AllContestants = ({
         </div>
       ) : (
         <div>
-          <div className='ctbtn'>
-              <ul className="nav-mean">
-                <li>
-                  <Link href="/">
-                    <a>About</a>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <div className="ctbtn">
+            <ul className="nav-mean">
+              <li>
+                <Link href="/">
+                  <a>About</a>
+                </Link>
+              </li>
+            </ul>
+          </div>
           <h1>CONTESTANTS</h1>
           {/* <Promise/> */}
           {allCandidates.map((acandi, index) => {
@@ -83,9 +82,9 @@ const AllContestants = ({
         </div>
       )}
       <style jsx>{`
-      .ctbtn {
-        width: 200px;
-      }
+        .ctbtn {
+          width: 200px;
+        }
         .nav-mean {
           gap: 22px;
           color: white;
