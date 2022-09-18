@@ -1,232 +1,226 @@
-import { Contract, providers } from "ethers";
-import Head from "next/head";
-import React, { useEffect, useRef, useState } from "react";
-import Web3Modal from "web3modal";
-import Contestant from "../Components/contestant";
-import AllContestants from "../Components/contestants";
+import React from 'react';
 import Link from 'next/link';
 
-
-// use this to make call to the contract
-import { abi, CONTRACT_ADDRESS } from "../constants";
-import styles from "../styles/Home.module.css";
-
-export default function Home() {
-  // walletConnected keep track of whether the user's wallet is connected or not
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [isACandidate, setisACandidate] = useState(false);
-  const [candidateDetails, setcandidateDetails] = useState([]);
-  const [allCandidates, setallCandidates] = useState([]);
-  const [promisesByCandidateId, setpromisesByCandidateId] = useState([]);
-
-  // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
-  const web3ModalRef = useRef();
-
-  /*
-        connectWallet: Connects the MetaMask wallet
-      */
-  const connectWallet = async () => {
-    try {
-      // Get the provider from web3Modal, which in our case is MetaMask
-      // When used for the first time, it prompts the user to connect their wallet
-      await getProviderOrSigner();
-      setWalletConnected(true);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  /**
-   * Returns a Provider or Signer object representing the Ethereum RPC with or without the
-   * signing capabilities of metamask attached
-   *
-   * A `Provider` is needed to interact with the blockchain - reading transactions, reading balances, reading state, etc.
-   *
-   * A `Signer` is a special type of Provider used in case a `write` transaction needs to be made to the blockchain, which involves the connected account
-   * needing to make a digital signature to authorize the transaction being sent. Metamask exposes a Signer API to allow your website to
-   * request signatures from the user using Signer functions.
-   *
-   * @param {*} needSigner - True if you need the signer, default false otherwise
-   */
-  const getProviderOrSigner = async (needSigner = false) => {
-    // Connect to Metamask
-    // Since we store `web3Modal` as a reference, we need to access the `current` value to get access to the underlying object
-    const provider = await web3ModalRef.current.connect();
-    const web3Provider = new providers.Web3Provider(provider);
-
-    // If user is not connected to the Mumbai network, let them know and throw an error
-    const { chainId } = await web3Provider.getNetwork();
-    if (chainId !== 80001) {
-      window.alert("Change the network to Mumbai");
-      throw new Error("Change network to Mumbai");
-    }
-
-    if (needSigner) {
-      const signer = web3Provider.getSigner();
-      return signer;
-    }
-    return web3Provider;
-  };
-
-  const getCandidates = async (candidateId = "") => {
-    try {
-      // Get the provider from web3Modal, which in our case is MetaMask
-      // No need for the Signer here, as we are only reading state from the blockchain
-      const signer = await getProviderOrSigner(true);
-
-      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
-
-      const _isACandidate = await contract.isACandidate(signer.getAddress());
-      //console.log("isACandidate", _isACandidate);
-      setisACandidate(_isACandidate);
-
-      const allCandidates = await contract.getAllCandidates();
-      setallCandidates(allCandidates);
-      // console.log("candidates", allCandidates);
-
-      const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
-      //console.log("candidate id:", _candidateId);
-
-      const candidateDetails = await contract.getCandidateDetails(_candidateId);
-      //console.log("candidate details", candidateDetails);
-      setcandidateDetails(candidateDetails);
-
-      const promisesByCandidateId = await contract.getPromisesByCandidateId(
-        _candidateId
-      );
-      // console.log("promises", promisesByCandidateId);
-      setpromisesByCandidateId(promisesByCandidateId);
-
-      // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
-      //   gasPrice: 100,
-      //   gasLimit: 9000000,
-      // });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const addPromise = async (domain, description) => {
-    try {
-      const signer = await getProviderOrSigner(true);
-      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
-      const addPromise = await contract.addPromise(
-        signer.getAddress(),
-        domain,
-        description
-      );
-      addPromise.wait();
-      const promisesByCandidateId = await contract.getPromisesByCandidateId(
-        signer.getAddress()
-      );
-      // console.log("promises", promisesByCandidateId);
-      setpromisesByCandidateId(promisesByCandidateId);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
-  const addVote = async (promiseId, vote) => {
-    try {
-      const signer = await getProviderOrSigner(true);
-      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
-      const addVote = await contract.VoteForPromise(
-        signer.getAddress(),
-        promiseId,
-        vote
-      );
-      addVote.wait();
-      const promisesByCandidateId = await contract.getPromisesByCandidateId(
-        candidateId
-      );
-      //console.log("promises", promisesByCandidateId);
-      setpromisesByCandidateId(promisesByCandidateId);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
-    if (!walletConnected) {
-      // Assign the Web3Modal class to the reference object by setting it's `current` value
-      // The `current` value is persisted throughout as long as this page is open
-      web3ModalRef.current = new Web3Modal({
-        network: "mumbai",
-        providerOptions: {},
-        disableInjectedProvider: false,
-      });
-
-      connectWallet();
-    }
-  }, [walletConnected]);
-
-  useEffect(() => {
-    (async () => {
-      if (walletConnected) {
-        await getCandidates();
-      }
-    })();
-  }, [walletConnected]);
-
-  useEffect(() => {
-    setInterval(async () => {
-      await getCandidates();
-    }, 5000);
-  }, []);
-
-  const renderButton = () => {
-    // If wallet is not connected, return a button which allows them to connect their wallet
-    if (!walletConnected) {
-      return (
-        <button onClick={connectWallet} className={styles.button}>
-          Connect your wallet
-        </button>
-      );
-    }
-  };
-
+const Intro = () => {
   return (
-    <div>
-      <Head>
-        <title>TheRudras</title>
-        <meta name="description" content="TheRudras-Dapp" />
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className={styles.main}>
-        {renderButton()}
-        {isACandidate ? (
-          <Contestant
-            candidateDetails={candidateDetails}
-            promisesByCandidateId={promisesByCandidateId}
-            addPromise={addPromise}
-            isACandidate={isACandidate}
-            addVote={addVote}
-          />
-        ) : (
-          <AllContestants
-            allCandidates={allCandidates}
-            candidateDetails={candidateDetails}
-            promisesByCandidateId={promisesByCandidateId}
-            addPromise={addPromise}
-            isACandidate={isACandidate}
-            getCandidates={getCandidates}
-            addVote={addVote}
-          />
-        )}
+    <div className="intro">
+      <div className="intro-contain">
+        <div className="intro-nav">
+          <p className="logo">
+            Rudras <br />
+            <span>(Rudras)</span>
+          </p>
+          <ul className="nav-mean">
+            <li>
+              <Link href="/home">
+                <a>Home</a>
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div className="intro-body">
+          <div className="intro-left">
+            <h4 className="intro-head">
+              Welcome to Election Campaign Promise tracker
+            </h4>
+            <p className="intro-descs">
+              We keeeps a track of the agenda of all the elected candidates and
+              there promises.
+            </p>
+            <p className="intro-desc">
+              Election Campaign Promise Tracker stores all the promises made by
+              elected candidates and stores it in the blockchain for immutable
+              database, so that it won't be changed by anyone
+            </p>
+            <p className="intro-desc">
+              To get started click the button below <br /> <br /> 👇
+            </p>
+            {/* Please note this is the button to connect to the wallet */}
+            <div className="intro-connect">
+              <Link href="/home">
+                <a>Connect wallet</a>
+              </Link>
+            </div>
+          </div>
+          <div className="intro-right">
+            <div className="intro-tab">
+              <div className="note fir">Reliability</div>
+              <div className="note">Security</div>
+              <div className="note sec">Ethereum</div>
+              <div className="note third">Polygon</div>
+              <div className="note">Inmutable Data</div>
+              <div className="note fourth">Blockchain</div>
+            </div>
+            {/* Logos */}
+            <div className="partner-logo">
+              <img
+                src="./polygonlogo.svg"
+                alt="polygon logo"
+                className="p-logo"
+              />
+              <img src="./HTM.png" alt="HTM" />
+              <img src="./logo-blue.png" alt="Learnweb3 logo" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <footer className={styles.footer}>
-        Made with &#10084; by The Rudras on Polygon
-      </footer>
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+        .intro-nav {
+          display: flex;
+          background-color: #74c6df8c;
+          top: 0;
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .intro-nav p {
+          padding: 5px 15px;
+          margin: 0px;
+        }
+        .intro-nav .logo {
+          font-family: Lobster;
+          font-size: 30px;
+        }
+        .intro-nav .logo span {
+          font-size: 14px;
+          font-family: Urbanist;
+        }
+        .nav-mean {
+          gap: 22px;
+          color: white;
+          margin-right: 10px;
+        }
+        .nav-mean li {
+          background-color: #120a3f;
+          padding: 10px 20px;
+          border-radius: 10px;
+        }
+        .intro-body {
+          display: flex;
+          /* padding: 0px 20px; */
+          width: 100vw;
+          justify-content: space-around;
+          align-items: center;
+          margin-bottom: 50px;
+        }
+        .intro-left {
+          text-align: left;
+        }
+        .intro-head {
+          font-size: 45px;
+          max-width: 600px;
+          font-weight: 600;
+          margin-bottom: 0px;
+        }
+
+        .intro-descs {
+          font-size: 18px;
+          color: white;
+          max-width: 600px;
+        }
+        .intro-desc {
+          font-size: 15px;
+          color: white;
+          max-width: 500px;
+        }
+        .intro-connect {
+          background-color: #120a3f;
+          width: fit-content;
+          padding: 10px 20px;
+          border-radius: 10px;
+          color: white;
+          font-size: 20px;
+          overflow: hidden;
+          cursor: pointer;
+          animation: shake 1s ease infinite;
+          transition: 1s linear;
+        }
+
+        .intro-connect:hover {
+          animation: none;
+        }
+
+        @keyframes bounce {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+
+        @keyframes shake {
+          0% {
+            transform: rotate(0deg);
+          }
+          25% {
+            transform: rotate(3deg);
+          }
+          50% {
+            transform: rotate(-3deg);
+          }
+          75% {
+            transform: rotate(3deg);
+          }
+          100% {
+            transform: rotate(0deg);
+          }
+        }
+
+        .intro-tab {
+          margin-top: 60px;
+          display: grid;
+          flex-wrap: wrap;
+          grid-template-columns: 1fr 1fr 1fr;
+          /* max-width: 400px; */
+          height: fit-content;
+          row-gap: 0px;
+          column-gap: 0px;
+          /* display: flex; */
+          /* border: 1px solid black;
+            border-radius: 10px;
+            width: fit-content;
+            height: fit-content; */
+        }
+        .note {
+          padding: 20px 30px;
+          border: 1px solid white;
+          font-size: 20px;
+          color: white;
+        }
+        .fir {
+          border-top-left-radius: 10px;
+        }
+        .sec {
+          border-top-right-radius: 10px;
+        }
+        .third {
+          border-bottom-left-radius: 10px;
+        }
+        .fourth {
+          border-bottom-right-radius: 10px;
+        }
+        .partner-logo {
+          display: flex;
+          align-items: center;
+          margin-top: 20px;
+        }
+        .partner-logo img {
+          width: 100px;
+        }
+        .partner-logo img:nth-child(3),
+        .partner-logo img:nth-child(1) {
+          width: 200px;
+        }
+      `}</style>
     </div>
   );
-}
+};
+
+export default Intro;

@@ -21,7 +21,7 @@ const Contestant = ({
             <div className='ctbtn'>
               <ul className="nav-mean">
                 <li>
-                  <Link href="/about">
+                  <Link href="/">
                     <a>About</a>
                   </Link>
                 </li>
