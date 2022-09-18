@@ -66,7 +66,7 @@ export default function Home() {
     return web3Provider;
   };
 
-  const getCandidates = async () => {
+  const getCandidates = async (candidateId = "") => {
     try {
       // Get the provider from web3Modal, which in our case is MetaMask
       // No need for the Signer here, as we are only reading state from the blockchain
@@ -74,21 +74,26 @@ export default function Home() {
 
       const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
 
-      const isACandidate = await contract.isACandidate(signer.getAddress());
-      // console.log("isACandidate", isACandidate);
-      setisACandidate(isACandidate);
+      const _isACandidate = await contract.isACandidate(signer.getAddress());
+      //console.log("isACandidate", _isACandidate);
+      setisACandidate(_isACandidate);
 
       const allCandidates = await contract.getAllCandidates();
       setallCandidates(allCandidates);
       // console.log("candidates", allCandidates);
 
-      const candidateDetails = await contract.getCandidateDetails(
-        signer.getAddress()
-      );
-      // console.log("candidate details", candidateDetails);
+      const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
+      //console.log("candidate id:", _candidateId);
+
+      const candidateDetails = await contract.getCandidateDetails(_candidateId);
+      //console.log("candidate details", candidateDetails);
       setcandidateDetails(candidateDetails);
 
-      await getPromisesByCandidateId();
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        _candidateId
+      );
+      //console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId);
 
       // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
       //   gasPrice: 100,
@@ -99,12 +104,25 @@ export default function Home() {
     }
   };
 
-  const getPromisesByCandidateId = async () => {
+  const getCandidateDetails = async (_isACandidate) => {
+    if (!_isACandidate && candidateId === "") return;
+    const signer = await getProviderOrSigner(true);
+    const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+    const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
+    const candidateDetails = await contract.getCandidateDetails(_candidateId);
+    // console.log("candidate details", candidateDetails);
+    setcandidateDetails(candidateDetails);
+  };
+
+  const getPromisesByCandidateId = async (_isACandidate) => {
+    debugger;
+    if (!_isACandidate && candidateId === "") return;
     const signer = await getProviderOrSigner(true);
 
     const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+    const _candidateId = _isACandidate ? signer.getAddress() : candidateId;
     const promisesByCandidateId = await contract.getPromisesByCandidateId(
-      signer.getAddress()
+      _candidateId
     );
     // console.log("promises", promisesByCandidateId);
     setpromisesByCandidateId(promisesByCandidateId);
@@ -157,7 +175,7 @@ export default function Home() {
 
   useEffect(() => {
     setInterval(async () => {
-      await getPromisesByCandidateId();
+      await getCandidates();
     }, 5000);
   }, []);
 
@@ -186,9 +204,17 @@ export default function Home() {
             candidateDetails={candidateDetails}
             promisesByCandidateId={promisesByCandidateId}
             addPromise={addPromise}
+            isACandidate={isACandidate}
           />
         ) : (
-          <AllContestants allCandidates={allCandidates} />
+          <AllContestants
+            allCandidates={allCandidates}
+            candidateDetails={candidateDetails}
+            promisesByCandidateId={promisesByCandidateId}
+            addPromise={addPromise}
+            isACandidate={isACandidate}
+            getCandidates={getCandidates}
+          />
         )}
       </div>
 
