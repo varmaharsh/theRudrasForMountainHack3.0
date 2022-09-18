@@ -3,7 +3,7 @@ import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
 import Web3Modal from "web3modal";
 import Contestant from "../Components/contestant";
-import AllContestants from "../Components/contestants"; 
+import AllContestants from "../Components/contestants";
 
 // use this to make call to the contract
 import { abi, CONTRACT_ADDRESS } from "../constants";
@@ -76,29 +76,19 @@ export default function Home() {
 
       const isACandidate = await contract.isACandidate(signer.getAddress());
       // console.log("isACandidate", isACandidate);
-      setisACandidate(isACandidate)
+      setisACandidate(isACandidate);
 
       const allCandidates = await contract.getAllCandidates();
-      setallCandidates(allCandidates)
+      setallCandidates(allCandidates);
       // console.log("candidates", allCandidates);
 
       const candidateDetails = await contract.getCandidateDetails(
         signer.getAddress()
       );
-      console.log("candidate details", candidateDetails);
-      setcandidateDetails(candidateDetails)
+      // console.log("candidate details", candidateDetails);
+      setcandidateDetails(candidateDetails);
 
-      const promisesByCandidateId = await contract.getPromisesByCandidateId(
-        signer.getAddress()
-      );
-      // console.log("promises", promisesByCandidateId);
-      setpromisesByCandidateId(promisesByCandidateId)
-
-      // const addPromise = await contract.addPromise(
-      //   signer.getAddress(),
-      //   "Hygiene",
-      //   "To make the water of ganges drinkable"
-      // );
+      await getPromisesByCandidateId();
 
       // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
       //   gasPrice: 100,
@@ -106,6 +96,39 @@ export default function Home() {
       // });
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const getPromisesByCandidateId = async () => {
+    const signer = await getProviderOrSigner(true);
+
+    const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+    const promisesByCandidateId = await contract.getPromisesByCandidateId(
+      signer.getAddress()
+    );
+    // console.log("promises", promisesByCandidateId);
+    setpromisesByCandidateId(promisesByCandidateId);
+  };
+
+  const addPromise = async (domain, description) => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+      const addPromise = await contract.addPromise(
+        signer.getAddress(),
+        domain,
+        description
+      );
+      addPromise.wait();
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        signer.getAddress()
+      );
+      // console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
     }
   };
 
@@ -132,6 +155,12 @@ export default function Home() {
     })();
   }, [walletConnected]);
 
+  useEffect(() => {
+    setInterval(async () => {
+      await getPromisesByCandidateId();
+    }, 5000);
+  }, []);
+
   const renderButton = () => {
     // If wallet is not connected, return a button which allows them to connect their wallet
     if (!walletConnected) {
@@ -141,7 +170,6 @@ export default function Home() {
         </button>
       );
     }
-    return <div>Powered By Polygon</div>;
   };
 
   return (
@@ -152,7 +180,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.main}>
-        {isACandidate? (<Contestant candidateDetails={candidateDetails} promisesByCandidateId={promisesByCandidateId} />): (<AllContestants allCandidates={allCandidates}/>)}
+        {renderButton()}
+        {isACandidate ? (
+          <Contestant
+            candidateDetails={candidateDetails}
+            promisesByCandidateId={promisesByCandidateId}
+            addPromise={addPromise}
+          />
+        ) : (
+          <AllContestants allCandidates={allCandidates} />
+        )}
       </div>
 
       <footer className={styles.footer}>
