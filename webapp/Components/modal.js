@@ -1,33 +1,37 @@
-import React, { useState } from "react";
-import { useNotification } from "web3uikit";
+import React, { useState } from 'react';
+import { useNotification } from 'web3uikit';
 
 const Modal = ({ addPromise, setShowModal }) => {
-  const [Domain, setDomain] = useState("");
-  const [Description, setDescription] = useState("");
+  const [Domain, setDomain] = useState('');
+  const [Description, setDescription] = useState('');
   const dispatch = useNotification();
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const success = await addPromise(Domain, Description);
     if (success) {
       dispatch({
-        type: "success",
-        message: "Successfully added promise to your election manifesto",
-        title: "Promise Added",
-        position: "topR",
+        type: 'success',
+        message: 'Successfully added promise to your election manifesto',
+        title: 'Promise Added',
+        position: 'topR',
       });
     } else {
       dispatch({
-        type: "error",
+        type: 'error',
         message:
           "Try again or check if you're signed in with the correct account",
         title: "Promise Couldn't be added",
-        position: "topR",
+        position: 'topR',
       });
     }
     setShowModal(false);
-    setDomain("");
-    setDescription("");
+    setDomain('');
+    setDescription('');
   };
 
   return (
@@ -54,6 +58,11 @@ const Modal = ({ addPromise, setShowModal }) => {
           </div>
 
           <button className="button">Submit</button>
+          <div className="buttonC">
+            <p className="button" onClick={closeModal}>
+              close
+            </p>
+          </div>
         </form>
 
         <style jsx>{`
@@ -121,6 +130,11 @@ const Modal = ({ addPromise, setShowModal }) => {
             border-radius: 10px;
             font-weight: 600;
             background-color: #5851dfcd;
+          }
+          .buttonC {
+              display: flex;
+              align-items: center;
+              justify-content: center;
           }
 
           .button:hover {

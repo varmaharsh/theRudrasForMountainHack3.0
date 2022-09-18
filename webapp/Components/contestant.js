@@ -20,7 +20,7 @@ const Contestant = ({
         <div className="cand-head">
           <h4 className="cand-name">Contestant: {candidateDetails.name}</h4>
           {isACandidate ? (
-            <button onClick={() => setShowModal(!showModal)}>
+            <button className={showModal ? 'hide' : 'show'} onClick={() => setShowModal(!showModal)}>
               {showModal ? <p>Close</p> : <p>Add Promise</p>}
             </button>
           ) : null}
@@ -87,6 +87,12 @@ const Contestant = ({
           max-width: 100%;
           margin: 50px 150px;
           margin-top: -55px;
+        }
+        .hide {
+          display: none;
+        }
+        .show {
+          display: block;
         }
 
         .cand-head {
