@@ -2,17 +2,23 @@ import React, { useState } from "react";
 import Table from "./Table";
 import Modal from "./modal";
 
-function Contestant({ candidateDetails, promisesByCandidateId, addPromise }) {
+function Contestant({
+  candidateDetails,
+  promisesByCandidateId,
+  addPromise,
+  isACandidate,
+}) {
   const [showModal, setShowModal] = useState(false);
-  // console.log("from candy", candidateDetails)
 
   return (
     <div className="container">
       <div>
         <h1 className="desc hbio">Contestant: {candidateDetails.name}</h1>
-        <button onClick={() => setShowModal(!showModal)}>
-          {showModal ? <p>Close</p> : <p>Add Promise</p>}
-        </button>
+        {isACandidate ? (
+          <button onClick={() => setShowModal(!showModal)}>
+            {showModal ? <p>Close</p> : <p>Add Promise</p>}
+          </button>
+        ) : null}
       </div>
       <div className="sides">
         <div className="sideA">
@@ -29,7 +35,10 @@ function Contestant({ candidateDetails, promisesByCandidateId, addPromise }) {
         </div>
         <div className="side">
           <h4>Promises</h4>
-          <Table promisesByCandidateId={promisesByCandidateId} />
+          <Table
+            promisesByCandidateId={promisesByCandidateId}
+            isACandidate={isACandidate}
+          />
         </div>
       </div>
       {showModal ? (
