@@ -29,8 +29,8 @@ const Contestant = ({
           <div className="cand-left">
             <h5 className="left-title title">Bio:</h5>
             <p>
-              This is a little detail about the contestant that participated in
-              the election.:
+              Here is some detail about the contestant that participated in the
+              election:
             </p>
             <div className="info">
               <ul className="cand-det-list">
@@ -76,7 +76,11 @@ const Contestant = ({
           </div>
           <div className="cand-right">
             <h5 className="right-title title">Promises:</h5>
-            <p>These are the list of promises made by the contestant:</p>
+            <p>
+              These are the list of promises made by the contestant and the
+              corresponding number of unfulfilled, fulfilled and inprogress
+              promises as per the voters:
+            </p>
             <div className="cand-prom-list">
               <ul className="cand-prom">
                 <Table
@@ -208,7 +212,6 @@ const Contestant = ({
           color: white;
           text-align: left;
           font-size: 18px;
-          margin-bottom: 40px;
         }
       `}</style>
     </div>
