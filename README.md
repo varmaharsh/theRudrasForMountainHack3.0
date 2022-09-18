@@ -6,6 +6,8 @@
 
 ### Link to the production app: (https://the-rudras-for-mountain-hack-3.vercel.app/)
 
+### Link to the video explainer: (https://youtu.be/i_rfaL5XKWU) (https://drive.google.com/file/d/1JXcOuYN__qNnlps5YOMX2kAB28qioFxG/view?usp=sharing)
+
 #### If you login as a contestant(address should we registered with us), you see your details and the list of promises you made in the election to which you can add but not edit or delete.
 
 #### All the other addresses will be voters in the election and see a list of all the candidates, clicking on which takes you to the details page, and has a list of promises you can cast your vote on depending on how you feel the candidate performed. Remember, you can vote on a promise only once and it takes a little time for updating it on chain.
