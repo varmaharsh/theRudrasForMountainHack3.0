@@ -84,8 +84,8 @@ const Contestant = ({
       </div>
       <style jsx>{`
         .cand-contain {
-          max-width: 1000px;
-          margin: 0px auto;
+          max-width: 100%;
+          margin: 50px 150px;
           margin-top: -55px;
         }
 
@@ -107,7 +107,7 @@ const Contestant = ({
         .cand-head button {
           background-color: #120a3f;
           width: fit-content;
-          padding: 10px 20px;
+          padding: 2px 20px;
           border-radius: 10px;
           color: white;
           font-size: 20px;
@@ -151,6 +151,7 @@ const Contestant = ({
           display: flex;
           align-items: baseline;
           gap: 20px;
+          width: 100%;
         }
         .cand-det h5 {
           font-size: 25px;
@@ -159,6 +160,7 @@ const Contestant = ({
 
         .cand-left {
           flex: 1;
+          max-width: 30%;
         }
         .cand-det-list {
           display: flex;
@@ -172,6 +174,7 @@ const Contestant = ({
         }
         .cand-right {
           flex: 1;
+          max-width: 70%;
         }
         .prom {
           display: flex;
