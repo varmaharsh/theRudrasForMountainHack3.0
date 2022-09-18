@@ -13,6 +13,7 @@
     "hardhat": "^2.11.2"
   },
   "dependencies": {
-    "dotenv": "^16.0.2"
+    "dotenv": "^16.0.2",
+    "web3uikit": "^1.0.4"
   }
 }
