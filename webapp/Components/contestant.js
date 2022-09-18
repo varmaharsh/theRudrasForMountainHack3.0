@@ -43,7 +43,13 @@ const Contestant = ({
                 <li>
                   <div className="candet">
                     <span>ID:</span>
-                    <span>{candidateDetails.id}</span>
+                    <span>
+                      {candidateDetails.id.substring(0, 10) +
+                        "...." +
+                        candidateDetails.id.substring(
+                          candidateDetails.id.length - 10
+                        )}
+                    </span>
                   </div>
                 </li>
                 <li>
