@@ -20,21 +20,25 @@ const AllContestants = ({
     <>
       {showCandidatePage ? (
         <div>
-          <Button
-            onClick={() => {
-              setShowCandidatePage(false);
-              getCandidates();
-            }}
-            text="Back"
-            type="button"
-          />
-          <Contestant
-            candidateDetails={candidateDetails}
-            promisesByCandidateId={promisesByCandidateId}
-            addPromise={addPromise}
-            isACandidate={isACandidate}
-            addVote={addVote}
-          />
+          <div>
+            <Button
+              onClick={() => {
+                setShowCandidatePage(false);
+                getCandidates();
+              }}
+              text="Back"
+              type="button"
+            />
+          </div>
+          <div>
+            <Contestant
+              candidateDetails={candidateDetails}
+              promisesByCandidateId={promisesByCandidateId}
+              addPromise={addPromise}
+              isACandidate={isACandidate}
+              addVote={addVote}
+            />
+          </div>
         </div>
       ) : (
         <div>
