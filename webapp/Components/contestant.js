@@ -7,6 +7,7 @@ function Contestant({
   promisesByCandidateId,
   addPromise,
   isACandidate,
+  addVote,
 }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -38,6 +39,7 @@ function Contestant({
           <Table
             promisesByCandidateId={promisesByCandidateId}
             isACandidate={isACandidate}
+            addVote={addVote}
           />
         </div>
       </div>

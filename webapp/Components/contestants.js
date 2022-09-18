@@ -10,6 +10,7 @@ const AllContestants = ({
   promisesByCandidateId,
   addPromise,
   isACandidate,
+  addVote,
 }) => {
   const [showCandidatePage, setShowCandidatePage] = useState(false);
 
@@ -29,6 +30,7 @@ const AllContestants = ({
         promisesByCandidateId={promisesByCandidateId}
         addPromise={addPromise}
         isACandidate={isACandidate}
+        addVote={addVote}
       />
     </div>
   ) : (

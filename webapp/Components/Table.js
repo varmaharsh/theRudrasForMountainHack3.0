@@ -1,6 +1,8 @@
+import React, { useState } from "react";
 import { Button } from "web3uikit";
+import VoteModal from "./VoteModal";
 
-function Table({ promisesByCandidateId, isACandidate }) {
+const Table = ({ promisesByCandidateId, isACandidate, addVote }) => {
   let heads = [
     "Id",
     "Domain",
@@ -12,6 +14,9 @@ function Table({ promisesByCandidateId, isACandidate }) {
   if (!isACandidate) {
     heads = [...heads, "Action"];
   }
+
+  const [showVoteModal, setShowVoteModal] = useState(false);
+  const [selectedPromiseId, setSelectedPromiseId] = useState("");
 
   return (
     <div className="App">
@@ -36,15 +41,29 @@ function Table({ promisesByCandidateId, isACandidate }) {
               <td>{`${val.inprogress}`}</td>
               {!isACandidate ? (
                 <td>
-                  <Button onClick={() => {}} text="Vote" type="button" />
+                  <Button
+                    onClick={() => {
+                      setShowVoteModal(true);
+                      setSelectedPromiseId(val.id);
+                    }}
+                    text="Vote"
+                    type="button"
+                  />
                 </td>
               ) : null}
             </tr>
           ))}
         </tbody>
       </table>
+      {showVoteModal ? (
+        <VoteModal
+          addVote={addVote}
+          setShowModal={setShowVoteModal}
+          promiseId={selectedPromiseId}
+        />
+      ) : null}
     </div>
   );
-}
+};
 
 export default Table;

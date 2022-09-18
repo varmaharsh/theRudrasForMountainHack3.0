@@ -92,7 +92,7 @@ export default function Home() {
       const promisesByCandidateId = await contract.getPromisesByCandidateId(
         _candidateId
       );
-      //console.log("promises", promisesByCandidateId);
+      // console.log("promises", promisesByCandidateId);
       setpromisesByCandidateId(promisesByCandidateId);
 
       // const vote = await contract.VoteForPromise(signer.getAddress(), 2, 0, {
@@ -142,6 +142,28 @@ export default function Home() {
         signer.getAddress()
       );
       // console.log("promises", promisesByCandidateId);
+      setpromisesByCandidateId(promisesByCandidateId);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const addVote = async (promiseId, vote) => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+      const addVote = await contract.VoteForPromise(
+        signer.getAddress(),
+        promiseId,
+        vote
+      );
+      addVote.wait();
+      const promisesByCandidateId = await contract.getPromisesByCandidateId(
+        candidateId
+      );
+      console.log("promises", promisesByCandidateId);
       setpromisesByCandidateId(promisesByCandidateId);
       return true;
     } catch (e) {
@@ -205,6 +227,7 @@ export default function Home() {
             promisesByCandidateId={promisesByCandidateId}
             addPromise={addPromise}
             isACandidate={isACandidate}
+            addVote={addVote}
           />
         ) : (
           <AllContestants
@@ -214,6 +237,7 @@ export default function Home() {
             addPromise={addPromise}
             isACandidate={isACandidate}
             getCandidates={getCandidates}
+            addVote={addVote}
           />
         )}
       </div>
