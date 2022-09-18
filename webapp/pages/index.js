@@ -30,7 +30,7 @@ const Intro = () => {
             <p className="intro-desc">
               Election Campaign Promise Tracker stores all the promises made by
               elected candidates and stores it in the blockchain for immutable
-              database, so that it won't be changed by anyone
+              database, so that it would not be changed by anyone
             </p>
             <p className="intro-desc">
               To get started click the button below <br /> <br /> 👇
