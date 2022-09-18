@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { Button } from 'web3uikit';
-import VoteModal from './VoteModal';
+import React, { useState } from "react";
+import { Button } from "web3uikit";
+import VoteModal from "./VoteModal";
 
 const Table = ({ promisesByCandidateId, isACandidate, addVote }) => {
   let heads = [
-    'Id',
-    'Domain',
-    'Description',
-    'Fulfiled',
-    'Unfulfiled',
-    'InProgress',
+    "Id",
+    "Domain",
+    "Description",
+    "Fulfilled",
+    "Unfulfilled",
+    "InProgress",
   ];
   if (!isACandidate) {
-    heads = [...heads, 'Action'];
+    heads = [...heads, "Action"];
   }
 
   const [showVoteModal, setShowVoteModal] = useState(false);
-  const [selectedPromiseId, setSelectedPromiseId] = useState('');
+  const [selectedPromiseId, setSelectedPromiseId] = useState("");
 
   return (
     <div className="App">
@@ -26,7 +26,7 @@ const Table = ({ promisesByCandidateId, isACandidate, addVote }) => {
             {heads.map((val, key) => (
               <th
                 key={key}
-                style={{ color: 'black', padding: '0px 10px' }}
+                style={{ color: "black", padding: "0px 10px" }}
                 className="theader"
               >
                 {val}
