@@ -6,7 +6,7 @@ const accounts = ['0x0A098Eda01Ce92ff4A4CCb7A4fFFb5A43EBC70DC',
 				 '0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C',
 				 '0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB',
 				 '0xdD870fA1b7C4700F2BD7f44238821C26f7392148',
-				 '0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c',];
+				 '0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c'];
 
 describe("ElectionPromiseTracker", function () {
   it("should return Names of given addresses", async function () {
@@ -39,7 +39,7 @@ describe("ElectionPromiseTracker", function () {
   });
   
   it("should return Names of given addresses", async function () {
-    // Deploy the good contract
+    // candadiates names should be returned
     const electionPromiseTracker = await ethers.getContractFactory("ElectionPromiseTracker");
     const electionPromise = await electionPromiseTracker.deploy();
     await electionPromise.deployed();
@@ -54,7 +54,7 @@ describe("ElectionPromiseTracker", function () {
    });
   
      it("Add a Promise, and check event is emitted", async function () {
-    // Deploy the good contract
+    // Add a Promise, and check event is emitted
     const electionPromiseTracker = await ethers.getContractFactory("ElectionPromiseTracker");
     const electionPromise = await electionPromiseTracker.deploy();
     await electionPromise.deployed();
