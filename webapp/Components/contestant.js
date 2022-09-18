@@ -27,7 +27,7 @@ function Contestant({candidateDetails, promisesByCandidateId}) {
               <li>ID: {candidateDetails.id}</li>
               <li>Consituency: {candidateDetails.constituency}</li>
               <li>Party: {candidateDetails.party}</li>
-              <li>Net Worth: </li> 
+              <li>Net Worth: {`${candidateDetails}`.split(',')[4]}</li> 
             </ul>
           </div>
         </div>
