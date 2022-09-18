@@ -44,11 +44,12 @@ const Contestant = ({
                   <div className="candet">
                     <span>ID:</span>
                     <span>
-                      {candidateDetails.id.substring(0, 10) +
-                        "...." +
-                        candidateDetails.id.substring(
-                          candidateDetails.id.length - 10
-                        )}
+                      {candidateDetails.id &&
+                        candidateDetails.id.substring(0, 10) +
+                          "...." +
+                          candidateDetails.id.substring(
+                            candidateDetails.id.length - 10
+                          )}
                     </span>
                   </div>
                 </li>
