@@ -12,7 +12,7 @@ function Table({promisesByCandidateId}) {
         <thead>
           <tr>
             {heads.map((val, key) => (
-              <th key={key} style={{ color: 'white' }} className="">
+              <th key={key} style={{ color: 'black', padding: "0px 10px" }} className="theader">
                 {val}
               </th>
             ))}
@@ -20,10 +20,10 @@ function Table({promisesByCandidateId}) {
         </thead>
         <tbody>
           {promisesByCandidateId.map((val, key) => (
-            <tr key={key}>
+            <tr key={key} className="trd">
               <td>{val.id}</td>
               <td>{val.domain}</td>
-              <td>{val.description}</td>
+              <td className="desc">{val.description}</td>
               <td>{`${val.fulfilled}`}</td>
               <td>{`${val.unfulfilled}`}</td>
               <td>{`${val.inprogress}`}</td>
@@ -31,6 +31,25 @@ function Table({promisesByCandidateId}) {
           ))}
         </tbody>
       </table>
+
+      <style jsx>{`  
+      .theader {
+        color: black;
+        
+      }
+      td {
+        margin: 0px 30px;
+      }
+      .desc {
+        display: flex;
+        align-items: baseline;
+      }
+      .trd {
+        align-items: baseline;
+        flex-direction: row;
+        
+      }
+      `}</style>
     </div>
   );
 }
